@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chess</title>
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(8, 64px);
+        grid-template-rows: repeat(8, 64px);
+        background-color: black;
+        /*gap: 2px;*/
+        padding: 2px;
+        width: fit-content;
+    }
+    /*
+    .grid-cell {
+        
+    }
+    */
+    .grid-cell-white {
+        color: black;
+        background-color: white;
+    }
+    .grid-cell-black {
+        color: white;
+        background-color: black;
+    }
+    .grid-cell-white-move {
+        color: black;
+        background-color: rgb(0, 127, 0);
+    }
+    .grid-cell-black-move {
+        color: white;
+        background-color: rgb(0, 63, 0);
+    }
+
+
+</style>
+</head>
+<body>
+
+    <div class="grid" id="grid1"></div>
+    
+    <script>
+        // set up html
+
+        const rows = 8, cols = 8;
+        const gridContainer = document.getElementById("grid1");
+        for (let i=0; i<rows; ++i) {
+            for (let j=0; j<cols; ++j) {
+                const cell = document.createElement("div");
+                //cell.textContent = i.toString() + ' ' + j.toString();
+                cell.dataset['row'] = i.toString();
+                cell.dataset['col'] = j.toString();
+                cell.addEventListener("click", tileClick);
+                if ((i+j)%2 == 0) {
+                    cell.classList.add("grid-cell-white");
+                } else {
+                    cell.classList.add("grid-cell-black");
+                }
+                cell.classList.add("grid-cell");
+                gridContainer.append(cell);
+            }
+        }
+
+
+        // set up game
+
+        let wBoard = new Array(8)
+        for (let i=0; i<6; ++i) {
+            wBoard[i] = new Array(8);
+        }
+        wBoard[6] = new Array("p","p","p","p","p","p","p","p");
+        wBoard[7] = new Array("r","n","b","q","k","b","n","r");
+
+        let bBoard = new Array(8)
+        for (let i=2; i<8; ++i) {
+            bBoard[i] = new Array(8);
+        }
+        bBoard[1] = new Array("p","p","p","p","p","p","p","p");
+        bBoard[0] = new Array("r","n","b","q","k","b","n","r");
+
+        function drawPieces() {
+            const board = document.querySelectorAll(".grid-cell")
+            for (let i = 0; i < board.length; ++i) {
+                const cell = board[i];
+                const row = parseInt(cell.dataset["row"]);
+                const col = parseInt(cell.dataset["col"]);
+                if (wBoard[row][col]) cell.textContent = wBoard[row][col];
+                else if (bBoard[row][col]) cell.textContent = bBoard[row][col];
+                else cell.textContent = null;
+            }
+        }
+
+
+        function drawMoves(moves) {
+            const board = document.querySelectorAll(".grid-cell")
+            for (let i = 0; i < board.length; ++i) {
+                const cell = board[i];
+                const row = parseInt(cell.dataset["row"]);
+                const col = parseInt(cell.dataset["col"]);
+
+                if (!moves[row][col]) continue;
+                
+                if ((row+col)%2 == 0) cell.classList.add("grid-cell-white-move");
+                else cell.classList.add("grid-cell-black-move");
+                
+            }
+        }
+
+        function undrawMoves() {
+            const board = document.querySelectorAll(".grid-cell")
+            for (let i = 0; i < board.length; ++i) {
+                const cell = board[i];
+                cell.classList.remove("grid-cell-white-move");
+                cell.classList.remove("grid-cell-black-move");
+                
+            }
+        }
+
+        drawPieces();
+
+
+        // game logic
+        let state = "w"; // w/b turn
+        function getCurrBoard() {
+            if (state == "w") return wBoard;
+            else return bBoard;
+        }
+        function getOppoBoard() {
+            if (state == "w") return bBoard;
+            else return wBoard;
+        }
+
+        let canMove = null;
+        let prevSelectedRow = null; // null when turn starts, then is set when player clicks on piece to move
+        let prevSelectedCol = null; // null when turn starts, then is set when player clicks on piece to move
+        let pieceSelected = false; // cant use other 2 vars to check because first row/col = 0 = false = null
+
+        function tileClick(event) {
+            const row = parseInt(this.dataset["row"]);
+            const col = parseInt(this.dataset["col"]);
+            /*// debug
+            console.log(row + ' ' + col);
+            if (wBoard[row][col] != null) console.log("There is a white " + wBoard[row][col] + " here.");
+            if (bBoard[row][col] != null) console.log("There is a black " + bBoard[row][col] + " here.");
+            */
+            let allyBoard = getCurrBoard();
+            let enemyBoard = getOppoBoard();
+            
+            if (pieceSelected) { // one is already selected
+                // check if valid move
+                if (row == prevSelectedRow && col == prevSelectedCol) return;
+
+                if (canMove[row][col]) {
+                    // make move
+                    console.log(allyBoard, prevSelectedRow, prevSelectedCol);
+                    allyBoard[row][col] = allyBoard[prevSelectedRow][prevSelectedCol];
+                    allyBoard[prevSelectedRow][prevSelectedCol] = null;
+                    enemyBoard[row][col] = null;
+                    drawPieces();
+                    if (state == "w") state = "b";
+                    else state = "w";
+                    console.log(state + " turn");
+                }
+                prevSelectedRow = null;
+                prevSelectedCol = null;
+                pieceSelected = false;
+                undrawMoves();
+            }
+            if (allyBoard[row][col]) {
+                prevSelectedRow = row;
+                prevSelectedCol = col;
+                pieceSelected = true;
+                canMove = possibleMoves(row, col);
+                drawMoves(canMove);
+            }
+        }
+
+        function possibleMoves(r, c) { // state and boards are global
+            let allyBoard = getCurrBoard();
+            let enemyBoard = getOppoBoard();
+
+            let moves = new Array(8);
+            for (let i=0; i<8; ++i) {
+                moves[i] = new Array(8);
+                for (let j=0; j<8; ++j) {
+                    moves[i][j] = false;
+                }
+            }
+            let piece = allyBoard[r][c];
+
+
+            switch (piece) {
+                case "k": {
+                    for (let dRow = -1; dRow <= 1; dRow++) {
+                        for (let dCol = -1; dCol <= 1; dCol++) {
+                            let nRow = r + dRow;
+                            let nCol = c + dCol
+                            if (nRow < 0 || nRow >= 8) continue;
+                            if (nCol < 0 || nCol >= 8) continue;
+                            if (allyBoard[nRow][nCol]) continue;
+                            if (checkSelfCheck(r, c, nRow, nCol)) continue;
+                            moves[nRow][nCol] = true;
+                        }
+                    }
+                    break;
+                }
+                case "q": {
+                    let dRow = [-1, 1, 0, 0];
+                    let dCol = [0, 0, -1, 1];
+                    for (let d = 0; d < 4; ++d) {
+                        let dr = dRow[d];
+                        let dc = dCol[d];
+                        let currR = r + dr;
+                        let currC = c + dc;
+                        while (currR >= 0 && currR < 8 && currC >= 0 && currC < 8) {
+                            if (allyBoard[currR][currC]) break;
+                            moves[currR][currC] = true;
+                            if (enemyBoard[currR][currC]) break;
+                            currR += dr;
+                            currC += dc;
+                        }
+                    }
+                    dRow = [-1, -1, 1, 1];
+                    dCol = [-1, 1, -1, 1];
+                    for (let d = 0; d < 4; ++d) {
+                        let dr = dRow[d];
+                        let dc = dCol[d];
+                        let currR = r + dr;
+                        let currC = c + dc;
+                        while (currR >= 0 && currR < 8 && currC >= 0 && currC < 8) {
+                            if (allyBoard[currR][currC]) break;
+                            moves[currR][currC] = true;
+                            if (enemyBoard[currR][currC]) break;
+                            currR += dr;
+                            currC += dc;
+                        }
+                    }
+                    break;
+                }
+                case "r": {
+                    let dRow = [-1, 1, 0, 0];
+                    let dCol = [0, 0, -1, 1];
+                    for (let d = 0; d < 4; ++d) {
+                        let dr = dRow[d];
+                        let dc = dCol[d];
+                        let currR = r + dr;
+                        let currC = c + dc;
+                        while (currR >= 0 && currR < 8 && currC >= 0 && currC < 8) {
+                            if (allyBoard[currR][currC]) break;
+                            moves[currR][currC] = true;
+                            if (enemyBoard[currR][currC]) break;
+                            currR += dr;
+                            currC += dc;
+                        }
+                    }
+                    break;
+                }
+                case "n": {
+                    let dRow = [-2, -2, 2, 2, -1, 1, -1, 1];
+                    let dCol = [-1, 1, -1, 1, -2, -2, 2, 2];
+                    for (let d = 0; d < 8; ++d) {
+                        let dr = dRow[d];
+                        let dc = dCol[d];
+                        let currR = r + dr;
+                        let currC = c + dc;
+                        //console.log(dRow + ' ' + dCol);
+                        if (currR >= 0 && currR < 8 && currC >= 0 && currC < 8 && !allyBoard[currR][currC])
+                            moves[currR][currC] = true;
+                    }
+                    break;
+                }
+                case "b": {
+                    let dRow = [-1, -1, 1, 1];
+                    let dCol = [-1, 1, -1, 1];
+                    for (let d = 0; d < 4; ++d) {
+                        let dr = dRow[d];
+                        let dc = dCol[d];
+                        let currR = r + dr;
+                        let currC = c + dc;
+                        while (currR >= 0 && currR < 8 && currC >= 0 && currC < 8) {
+                            if (allyBoard[currR][currC]) break;
+                            moves[currR][currC] = true;
+                            if (enemyBoard[currR][currC]) break;
+                            currR += dr;
+                            currC += dc;
+                        }
+                    }
+                    break;
+                }
+                case "p": {
+                    let d = -1;
+                    if (state == "b") d = 1;
+
+                    if (enemyBoard[r+d][c+d]) moves[r+d][c+d] = true;
+                    if (enemyBoard[r+d][c-d]) moves[r+d][c-d] = true;
+                    if (allyBoard[r+d][c] || enemyBoard[r+d][c]) break;
+                    moves[r+d][c] = true;
+                    if (r != (3.5 - (2.5 * d)) || allyBoard[r+d+d][c] || enemyBoard[r+d+d][c]) break;
+                    moves[r+d+d][c] = true;
+                    break;
+                }
+            }
+            moves[r][c] = false;
+            return moves;
+        }
+
+        function checkSelfCheck(r1, c1, r2, c2) { // returns true if there is a self check
+            return false;
+        }
+
+
+    </script>
+</body>
+</html>
