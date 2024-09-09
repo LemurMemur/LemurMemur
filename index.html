@@ -4,35 +4,37 @@
 <title>Page Title</title>
 <style>
   body {
-    background-color: black;
-    color: white;
+    margin: 0;
+    background-color: #BBD0FF;
+    color: black;
   }
   nav {
-    /*list-style-type: none;
-    margin: 0;
-    padding: 0;
-    height: 80px;*/
-    text-align:center;
-    vertical-align: middle;
-    background-color:rgb(255, 172, 172);
+    overflow: hidden;
+    background-color:#B8C0FF;
   }
   .nav-item {
-    display: inline-block;
-    width: 200px;
-    /*text-align: center;*/
-    margin: 20px;
-    padding: 20px;
-    vertical-align: middle;
-    background-color:rgb(167, 255, 132);
+    float: left;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    background-color:#B8C0FF;
+  }
+  .nav-item:hover {
+  background-color: #E7C6FF;
+  color: black;
+  }
+  .active {
+  background-color: #FFD6FF;
+  color: black;
   }
 </style>
 </head>
 <body>
     <nav>
-        <a href="./" class="nav-item">Home</a>
-        <a href="./projects"  class="nav-item">Projects</a>
-        <a href="./coursework/"  class="nav-item">Coursework</a>
-        <a href="./coursework/"  class="nav-item">3D Modelling</a>
+        <a href="./index.html" class="nav-item active">Home</a>
+        <a href="./projects.html"  class="nav-item">Projects</a>
+        <a href="./coursework.html"  class="nav-item">Coursework</a>
+        <a href="./modelling.html"  class="nav-item">3D Modelling</a>
       </nav>
     <h1>This is a Heading</h1>
     <p>This is a paragraph.</p>
