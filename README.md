@@ -1,4 +1,10 @@
-
+Hi! Welcome to my GitHub page!  
+[My portfolio](https://lemurmemur.github.io/LemurMemur/index.html) (Under Construction)  
+  
+- 🏫 I'm currently at university
+- 🌱 Outside of SWE, I’m currently learning 3D Modelling with Blender
+- 😄 Pronouns: Any
+- ⚡ Fun fact: I'm ranked in the top 150 for both Jstris Ultra and TETR.IO Blitz
 <!--
 **LemurMemur/LemurMemur** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
 
