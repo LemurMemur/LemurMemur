@@ -1,0 +1,33 @@
+body {
+	margin: 0;
+	background-color: #BBD0FF;
+	color: black;
+	font-family: "Courier New", monospace;
+}
+nav {
+	overflow: hidden;
+	background-color:#B8C0FF;
+}
+.nav-item {
+	float: left;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-size: 17px;
+	background-color:#B8C0FF;
+}
+.nav-item:hover {
+	background-color: #E7C6FF;
+	color: black;
+}
+.active {
+	background-color: #FFD6FF;
+	color: black;
+}
+.text-section {
+	border-radius: 5px;
+	border: 2px solid #000000;
+    margin: 2%;
+	padding: 1%;
+	width: 94%;
+	height: fit-content;
+}

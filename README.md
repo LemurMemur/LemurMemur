@@ -1,8 +1,8 @@
 Hi! Welcome to my GitHub page!  
 [My portfolio](https://lemurmemur.github.io/LemurMemur/index.html) (Under Construction)  
   
-- 🏫 I'm currently at university
-- 🌱 Outside of SWE, I’m currently learning 3D Modelling with Blender
+- 🏫 I'm an undergraduate CS major at Georgia Tech
+- 🌱 Outside of SWE, I’m currently learning CFD and 3D Modelling
 - 😄 Pronouns: Any
 - ⚡ Fun fact: I'm ranked in the top 150 for both Jstris Ultra and TETR.IO Blitz
 <!--
