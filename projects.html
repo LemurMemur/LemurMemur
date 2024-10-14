@@ -3,6 +3,30 @@
 <head>
 <title>Page Title</title>
 <link rel="stylesheet" href="portfolioPage.css">
+<style>
+  .project-item {
+    border-radius: 5px;
+    border: 2px solid #777777;
+    margin: 1%;
+    padding: 1%;
+    width: 96%;
+    height: fit-content;
+
+    display: grid;
+    align-items: center;
+    column-gap: 5px;
+  }
+  .odd {
+    grid-template-columns: 1fr 3fr;
+  }
+  .even {
+    grid-template-columns: 3fr 1fr;
+  }
+  img {
+    height: 300px;
+    border-radius: 5px;
+  }
+</style>
 </head>
 <body>
   <nav>
@@ -13,8 +37,33 @@
   </nav>
 
   <div style="padding-left:16px">
-    <h2>Under Construction</h2>
+    <h2>Here are some projects that I've worked on:</h2>
     <p></p>
+  </div>
+  
+  <div class="text-section">
+    Current Projects:
+    <div class="project-item odd">
+      <img src="CFD Project Graph.png">
+      <div>
+        <h2>Vertically Integrated Project - Computational Fluid Dynamics</h2>
+        <p>This is a Vertically Integrated Project at Georgia Tech, where students from many different levels work together. We are working on a Computational Fluid Dynamics solver from scratch. 
+          To do this, I've needed to independently learn the mathematics behind fluid dynamics. 
+          We are also working on introducing multithreading to the solver, and changing our implementation accordingly.</p>
+      </div>
+    </div>
+    
+  </div>
+  <div class="text-section">
+    Past Projects:
+    <div class="project-item odd">
+      <img src="Hoho Icon.png">
+      <div>
+        <h2>Terraria Mod - Hoho</h2>
+        <p>This is a Plugin for the video game Terraria, </p>
+      </div>
+    </div>
+    
   </div>
 
 </body>
